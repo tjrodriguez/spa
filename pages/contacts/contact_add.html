@@ -1,0 +1,94 @@
+<div x-data="{ 
+    product: {
+        name: '',
+        description: '',
+        price: '',
+        stock: '',
+        image: ''
+    },
+    message: '',
+    messageClass: '',
+
+    addProduct() {
+        const url = `${Alpine.store('settings').apiBaseUrl}/products/`;
+        console.log('Adding product:', this.product);
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                ...this.product,
+                price: parseFloat(this.product.price),
+                stock: parseInt(this.stock)
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => {
+                    throw new Error(text || 'Failed to add product');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Product added:', data);
+            this.message = 'Product added successfully!';
+            this.messageClass = 'ui success message';
+            this.product = {name: '', description: '', price: '', stock: '', image: ''};
+            
+            // Optionally navigate to product list after success
+            setTimeout(() => navigateTo('product/product_display'), 1500);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            this.message = `Failed to add product: ${error.message}`;
+            this.messageClass = 'ui error message';
+        });
+    }
+}">
+    <div class="ui segment">
+        <h2 class="ui header">Add New Product</h2>
+        
+        <!-- Message display -->
+        <div x-show="message" :class="messageClass" x-text="message"></div>
+
+        <!-- Product form -->
+        <form class="ui form" @submit.prevent="addProduct">
+            <div class="field">
+                <label>Product Name</label>
+                <input type="text" x-model="product.name" placeholder="Enter product name" required>
+            </div>
+
+            <div class="field">
+                <label>Description</label>
+                <textarea x-model="product.description" placeholder="Enter product description" required></textarea>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Price ($)</label>
+                    <input type="number" x-model="product.price" step="0.01" min="0" placeholder="0.00" required>
+                </div>
+
+                <div class="field">
+                    <label>Stock</label>
+                    <input type="number" x-model="product.stock" min="0" placeholder="0" required>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Image URL (Optional)</label>
+                <input type="url" x-model="product.image" placeholder="https://example.com/image.jpg">
+            </div>
+
+            <div class="ui buttons">
+                <button class="ui primary button" type="submit">Add Product</button>
+                <div class="or"></div>
+                <button class="ui button" type="button" @click="navigateTo('product/product_display')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

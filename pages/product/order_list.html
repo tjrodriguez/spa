@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5; /* Indigo */
+            --primary-hover: #4338ca; /* Darker indigo */
+            --success-color: #10b981; /* Emerald */
+            --warning-color: #f59e0b; /* Amber */
+            --danger-color: #ef4444; /* Red */
+            --info-color: #3b82f6; /* Blue */
+            --text-color: #1f2937; /* Gray 800 */
+            --text-light: #6b7280; /* Gray 500 */
+            --background-color: #f9fafb; /* Gray 50 */
+            --card-background: #ffffff;
+            --border-color: #e5e7eb; /* Gray 200 */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            font-size: 16px;
+            min-height: 100vh;
+        }
+        
+        .ui.container {
+            max-width: 1000px !important;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        /* Navigation */
+        .ui.top.attached.menu {
+            background-color: var(--card-background);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            overflow: hidden;
+            border: none;
+            box-shadow: var(--shadow-sm);
+            margin-top: 1rem;
+        }
+        
+        .ui.top.attached.menu .item {
+            color: var(--text-color);
+            font-weight: 500;
+            padding: 1.25rem 1.5rem;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+            letter-spacing: 0.01em;
+        }
+        
+        .ui.top.attached.menu .item:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+            color: var(--primary-color);
+        }
+        
+        .ui.top.attached.menu .active.item {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+        
+        /* Main Content */
+        .ui.attached.segment {
+            border: none;
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            background-color: var(--card-background);
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        /* Success Message */
+        .ui.success.message {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border: none;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .ui.success.message .header {
+            color: #064e3b;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .ui.success.message p {
+            color: #065f46;
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .ui.success.message .check.circle.icon {
+            font-size: 2rem;
+            color: var(--success-color);
+        }
+        
+        /* Info Message */
+        .ui.info.message {
+            background-color: #eff6ff;
+            color: #1e40af;
+            border: none;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .ui.info.message .header {
+            color: #1e3a8a;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .ui.info.message p {
+            color: #1e40af;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        .ui.info.message .sync.icon {
+            animation: spin 2s linear infinite;
+            font-size: 1.5rem;
+            color: var(--info-color);
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Negative Message */
+        .ui.negative.message {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: none;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .ui.negative.message .content {
+            color: #991b1b;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+        
+        /* Order Segments */
+        .ui.segments {
+            box-shadow: none;
+            border: none;
+            margin-bottom: 2rem;
+        }
+        
+        .ui.segment {
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .ui.segment:hover {
+            box-shadow: var(--shadow-md);
+        }
+        
+        .ui.segments .segment {
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+        }
+        
+        .ui.segments .segment:last-child {
+            margin-bottom: 0;
+        }
+        
+        .ui.secondary.segment {
+            background-color: #f8fafc;
+        }
+        
+        /* Headers */
+        .ui.header {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .ui.header .content .sub.header {
+            color: var(--text-light);
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
+        
+        .ui.header .icon {
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+        
+        h3.ui.header {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h4.ui.header {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        /* Lists */
+        .ui.list {
+            margin-bottom: 0;
+        }
+        
+        .ui.list .item {
+            padding: 0.5rem 0;
+        }
+        
+        .ui.list .item .icon {
+            color: var(--text-light);
+        }
+        
+        .ui.list .item .content {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        
+        /* Labels */
+        .ui.label {
+            border-radius: 9999px;
+            padding: 0.5em 1em;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: capitalize;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .ui.blue.label {
+            background-color: #3b82f6 !important;
+            color: white !important;
+            border-color: #3b82f6 !important;
+        }
+        
+        .ui.green.label {
+            background-color: #10b981 !important;
+            color: white !important;
+            border-color: #10b981 !important;
+        }
+        
+        .ui.purple.label {
+            background-color: #8b5cf6 !important;
+            color: white !important;
+            border-color: #8b5cf6 !important;
+        }
+        
+        .ui.yellow.label {
+            background-color: #f59e0b !important;
+            color: white !important;
+            border-color: #f59e0b !important;
+        }
+        
+        .ui.red.label {
+            background-color: #ef4444 !important;
+            color: white !important;
+            border-color: #ef4444 !important;
+        }
+        
+        /* Order Items */
+        .ui.divided.items .item {
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 0;
+            margin: 0;
+        }
+        
+        .ui.divided.items .item:last-child {
+            border-bottom: none;
+        }
+        
+        .ui.items .item .image {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            width: 90px !important;
+            height: 90px !important;
+            background-color: #f1f5f9;
+            margin-right: 1.5rem !important;
+        }
+        
+        .ui.items .item .content .header {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .meta {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .meta .price {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .extra .ui.right.floated {
+            font-weight: 700;
+            color: var(--text-color);
+            font-size: 1.1rem;
+        }
+        
+        /* Statistics */
+        .ui.statistics {
+            display: flex;
+            justify-content: space-between;
+            margin: 1.5rem 0 1rem;
+            width: 100%;
+        }
+        
+        .ui.statistics .statistic {
+            margin: 0;
+            flex: 1;
+        }
+        
+        .ui.statistics .statistic .value {
+            font-size: 1.75rem !important;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+        
+        .ui.statistics .statistic .label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 0.5rem !important;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        /* Action Buttons */
+        .ui.center.aligned.container {
+            margin-top: 2.5rem !important;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .ui.button {
+            border-radius: var(--radius-md);
+            padding: 0.85rem 1.75rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .ui.primary.button {
+            background-color: var(--primary-color);
+        }
+        
+        .ui.primary.button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .ui.button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* Loading State */
+        .ui.dimmer {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .ui.loader:before {
+            border: 0.2em solid rgba(79, 70, 229, 0.2);
+        }
+        
+        .ui.loader:after {
+            border-color: var(--primary-color) transparent transparent;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes highlight {
+            0% { background-color: #fffbeb; }
+            100% { background-color: transparent; }
+        }
+        
+        .highlight {
+            animation: highlight 2s ease-out;
+        }
+        
+        [x-cloak] { 
+            display: none !important; 
+        }
+        
+        /* Custom Transitions */
+        .slide-fade-enter-active {
+            animation: slideInUp 0.4s ease-out;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ui.container {
+                padding: 1.5rem 1rem;
+            }
+            
+            .ui.attached.segment {
+                padding: 1.5rem;
+            }
+            
+            .ui.statistics {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .ui.two.statistics .statistic {
+                text-align: center;
+            }
+            
+            .ui.top.attached.menu .item {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .ui.success.message, 
+            .ui.info.message {
+                padding: 1rem;
+            }
+            
+            .ui.items .item {
+                flex-direction: column;
+            }
+            
+            .ui.items .item .image {
+                margin-right: 0 !important;
+                margin-bottom: 1rem;
+                width: 100% !important;
+                height: 180px !important;
+            }
+            
+            .meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .meta .price {
+                margin-left: 0 !important;
+            }
+            
+            .extra .ui.right.floated {
+                float: none !important;
+                margin-top: 0.75rem;
+                display: block;
+            }
+            
+            .ui.center.aligned.container {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .ui.center.aligned.container .button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h3.ui.header {
+                font-size: 1.3rem;
+            }
+            
+            h4.ui.header {
+                font-size: 1.1rem;
+            }
+            
+            .ui.statistics .statistic .value {
+                font-size: 1.5rem !important;
+            }
+            
+            .ui.button {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ui container" style="padding: 2rem;"
+         x-data="{
+            order: null,
+            loading: true,
+            error: null,
+            pollingInterval: null,
+
+            startPolling() {
+                this.pollingInterval = setInterval(() => {
+                    this.fetchLastOrder();
+                }, 5000); // Poll every 5 seconds
+            },
+
+            stopPolling() {
+                if (this.pollingInterval) {
+                    clearInterval(this.pollingInterval);
+                }
+            },
+
+            async fetchLastOrder() {
+                try {
+                    const response = await fetch('http://localhost:8001/api/payments/?latest=true');
+                    if (!response.ok) throw new Error('Failed to fetch order');
+                    const orders = await response.json();
+                    
+                    if (orders.length > 0) {
+                        const newOrder = orders[0];
+                        if (!this.order || newOrder.id !== this.order.id) {
+                            this.order = newOrder;
+                            this.showNotification();
+                        }
+                    }
+                } catch (error) {
+                    this.error = 'Error: ' + error.message;
+                } finally {
+                    this.loading = false;
+                }
+            },
+
+            showNotification() {
+                if (this.order && Notification.permission === 'granted') {
+                    new Notification('Order Updated!', {
+                        body: `Order #${this.order.id} has been updated`,
+                        icon: '/path/to/icon.png'
+                    });
+                }
+            },
+
+            formatDate(dateString) {
+                return new Date(dateString).toLocaleString();
+            },
+
+            formatCurrency(amount) {
+                return new Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                }).format(amount);
+            }
+         }"
+         x-init="fetchLastOrder(); startPolling()"
+         @unload.window="stopPolling">
+
+        <!-- Navigation -->
+        <div class="ui top attached menu">
+            <a href="product_display.html" class="item">
+                <i class="shopping bag icon"></i> Products
+            </a>
+            <a href="/app/spa/index.html#product/view_cart" class="item">
+                <i class="shopping cart icon"></i> Cart
+            </a>
+            <a href="order_list.html" class="item">
+                <i class="list icon"></i> Order History
+            </a>
+            <div class="active right item">
+                <i class="check circle icon"></i> Order Confirmation
+            </div>
+        </div>
+
+        <div class="ui attached segment">
+            <!-- Loading State -->
+            <div class="ui active dimmer" x-show="loading" x-cloak>
+                <div class="ui loader"></div>
+            </div>
+
+            <!-- Error Message -->
+            <div class="ui negative message" x-show="error" x-cloak>
+                <i class="close icon" @click="error = null"></i>
+                <div class="content" x-text="error"></div>
+            </div>
+
+            <!-- Success Message -->
+            <div class="ui success message" 
+                 x-show="order && !loading"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0">
+                <i class="check circle icon"></i>
+                <div class="content">
+                    <div class="header">Order Successfully Placed!</div>
+                    <p>Thank you for your purchase. Your order has been confirmed.</p>
+                </div>
+            </div>
+
+            <!-- Real-time Update Indicator -->
+            <div class="ui info message" x-show="!loading">
+                <i class="sync icon"></i>
+                <div class="content">
+                    <div class="header">Real-time Updates Active</div>
+                    <p>This page will automatically update when order status changes.</p>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="ui segments" 
+                 x-show="order && !loading"
+                 x-transition:enter="slide-fade-enter-active">
+                
+                <!-- Order Summary -->
+                <div class="ui segment">
+                    <h3 class="ui header">
+                        <i class="shopping bag icon"></i>
+                        <div class="content">
+                            Order Summary
+                            <div class="sub header" x-text="'Order #' + order.id"></div>
+                        </div>
+                    </h3>
+                </div>
+
+                <!-- Shipping Details -->
+                <div class="ui segment">
+                    <h4 class="ui header">Shipping Details</h4>
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="user icon"></i>
+                            <div class="content" x-text="order.name"></div>
+                        </div>
+                        <div class="item">
+                            <i class="mail icon"></i>
+                            <div class="content" x-text="order.email"></div>
+                        </div>
+                        <div class="item">
+                            <i class="map marker alternate icon"></i>
+                            <div class="content" x-text="order.address"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Information -->
+                <div class="ui segment">
+                    <h4 class="ui header">Payment Information</h4>
+                    <div class="ui list">
+                        <div class="item">
+                            <i class="payment icon"></i>
+                            <div class="content">
+                                <div class="ui label" 
+                                     :class="{
+                                         'blue': order.payment_method === 'paypal',
+                                         'green': order.payment_method === 'gcash',
+                                         'purple': order.payment_method === 'maya'
+                                     }"
+                                     x-text="order.payment_method">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <i class="calendar icon"></i>
+                            <div class="content" x-text="formatDate(order.created_at)"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ordered Items -->
+                <div class="ui segment">
+                    <h4 class="ui header">Ordered Items</h4>
+                    <div class="ui divided items">
+                        <template x-for="product in order.products" :key="product.id">
+                            <div class="item">
+                                <div class="image">
+                                    <img :src="product.image_url || 'https://via.placeholder.com/100'" 
+                                         :alt="product.name"
+                                         style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="content">
+                                    <div class="header" x-text="product.name"></div>
+                                    <div class="meta">
+                                        <span x-text="'Quantity: ' + product.quantity"></span>
+                                        <span class="price" x-text="formatCurrency(product.price)"></span>
+                                    </div>
+                                    <div class="extra">
+                                        <span class="ui right floated" 
+                                              x-text="formatCurrency(product.price * product.quantity)">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="ui secondary segment">
+                    <div class="ui two statistics">
+                        <div class="statistic">
+                            <div class="value" x-text="formatCurrency(order.total_amount)"></div>
+                            <div class="label">Total Amount</div>
+                        </div>
+                        <div class="statistic">
+                            <div class="value">
+                                <div class="ui label"
+                                     :class="{
+                                         'green': order.status === 'completed',
+                                         'yellow': order.status === 'pending',
+                                         'red': order.status === 'failed'
+                                     }"
+                                     x-text="order.status">
+                                </div>
+                            </div>
+                            <div class="label">Status</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="ui center aligned container" style="margin-top: 2em;">
+                <a href="/app/spa/index.html#product/product_display" class="ui primary button">
+                    <i class="shopping cart icon"></i>
+                    Continue Shopping
+                </a>
+                <a href="order_list.html" class="ui button">
+                    <i class="history icon"></i>
+                    View All Orders
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Request notification permissions when page loads
+        if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+            Notification.requestPermission();
+        }
+    </script>
+</body>
+</html>
